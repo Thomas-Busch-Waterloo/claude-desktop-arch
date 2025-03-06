@@ -1,55 +1,65 @@
-2025-01-11: [rlmattax](https://github.com/rlmattax) updated link from 0.7.7 to 0.7.8.
+# Claude Desktop for Linux
 
 ***THIS IS AN UNOFFICIAL BUILD SCRIPT!***
 
 If you run into an issue with this build script, make an issue here. Don't bug Anthropic about it - they already have enough on their plates.
 
-# Claude Desktop for Linux
-
 This project was inspired by [k3d3's claude-desktop-linux-flake](https://github.com/k3d3/claude-desktop-linux-flake) and their [Reddit post](https://www.reddit.com/r/ClaudeAI/comments/1hgsmpq/i_successfully_ran_claude_desktop_natively_on/) about running Claude Desktop natively on Linux. Their work provided valuable insights into the application's structure and the native bindings implementation.
 
-Supports MCP!
+Claude Desktop now supports multiple Linux distributions including Debian-based systems (Ubuntu, Linux Mint, MX Linux), NixOS, and Arch-based systems (Arch Linux, Manjaro, cachyOS).
 
-Location of the MCP-configuration file is: `~/.config/Claude/claude_desktop_config.json`
+## Features
+
+- Supports MCP! Location of the MCP-configuration file is: `~/.config/Claude/claude_desktop_config.json`
+- Supports the Ctrl+Alt+Space popup!
+- Supports the Tray menu!
 
 ![image](https://github.com/user-attachments/assets/93080028-6f71-48bd-8e59-5149d148cd45)
 
-Supports the Ctrl+Alt+Space popup!
-![image](https://github.com/user-attachments/assets/1deb4604-4c06-4e4b-b63f-7f6ef9ef28c1)
-
-Supports the Tray menu! (Screenshot of running on KDE)
-![image](https://github.com/user-attachments/assets/ba209824-8afb-437c-a944-b53fd9ecd559)
-
 # Installation Options
 
-## 1. Debian Package (New!)
+## 1. Arch Linux Installation (New!)
 
-For Debian-based distributions (Debian, Ubuntu, Linux Mint, MX Linux, etc.), you can build and install Claude Desktop using the provided build script:
+For Arch Linux-based distributions (Arch Linux, Manjaro, cachyOS, etc.), you can build and install Claude Desktop using the provided Arch build script:
 
 ```bash
 # Clone this repository
-git clone https://github.com/aaddrick/claude-desktop-debian.git
-cd claude-desktop-debian
+git clone https://github.com/Thomas-Busch-Waterloo/claude-desktop-arch.git
+cd claude-desktop-arch
 
-# Build the package
-sudo ./build-deb.sh
-sudo dpkg -i ./build/electron-app/claude-desktop_0.7.9_amd64.deb
+# Build and install
+sudo ./build-arch.sh
 
-# The script will automatically:
-# - Check for and install required dependencies
-# - Download and extract resources from the Windows version
-# - Create a proper Debian package
-# - Guide you through installation
+# Follow the instructions to install using one of the provided methods:
+# Option 1: Use makepkg to create and install an Arch package
+cd build
+makepkg -si
+
+# OR
+
+# Option 2: Use the direct installation script (simpler)
+sudo ./build/install.sh
 ```
 
 Requirements:
-- Any Debian-based Linux distribution
-- Node.js >= 12.0.0 and npm
+- Any Arch Linux-based distribution
+- Node.js and npm
+- electron package
 - Root/sudo access for dependency installation
 
-## 2. NixOS Implementation
+The script automatically:
+- Checks for and installs required dependencies via pacman
+- Downloads and extracts resources from the Windows version
+- Handles localization files for proper Electron integration
+- Provides both package-based and direct installation options
 
-For NixOS users, please refer to [k3d3's claude-desktop-linux-flake](https://github.com/k3d3/claude-desktop-linux-flake) repository. Their implementation is specifically designed for NixOS and provides the original Nix flake that inspired this project.
+## 2. Debian Package
+
+For Debian-based distributions (Debian, Ubuntu, Linux Mint, MX Linux, etc.), please refer to [aaddrick's claude-desktop-debian](https://github.com/k3d3/claude-desktop-linux-flake) repository. Their implementation is specifically designed for NixOS and provides the original Nix flake that inspired this project.
+
+## 3. NixOS Implementation
+
+For NixOS users, please refer to [k3d3's claude-desktop-linux-flake](https://github.com/aaddrick/claude-desktop-debian/tree/main) repository. Their implementation is specifically designed for NixOS and provides the original Nix flake that inspired this project.
 
 # How it works
 
@@ -58,7 +68,7 @@ Claude Desktop is an Electron application packaged as a Windows executable. Our 
 1. Downloads and extracts the Windows installer
 2. Unpacks the app.asar archive containing the application code
 3. Replaces the Windows-specific native module with a Linux-compatible implementation
-4. Repackages everything into a proper Debian package
+4. Repackages everything into the appropriate format for your distribution
 
 The process works because Claude Desktop is largely cross-platform, with only one platform-specific component that needs replacement.
 
@@ -82,19 +92,20 @@ The replacement module is carefully designed to match the original API while pro
 
 ## Build Process Details
 
-> Note: The build script was generated by Claude (Anthropic) to help create a Linux-compatible version of Claude Desktop.
+> Note: The build scripts were generated by Claude (Anthropic) to help create Linux-compatible versions of Claude Desktop.
 
-The build script (`build-deb.sh`) handles the entire process:
+The build scripts handle the entire process:
 
-1. Checks for a Debian-based system and required dependencies
-2. Downloads the official Windows installer
-3. Extracts the application resources
-4. Processes icons for Linux desktop integration
-5. Unpacks and modifies the app.asar:
-   - Replaces the native module with our Linux version
-   - Updates keyboard key mappings
-   - Preserves all other functionality
-6. Creates a proper Debian package with:
+1. Check for system requirements and install dependencies
+2. Download the official Windows installer
+3. Extract the application resources
+4. Process icons for Linux desktop integration
+5. Unpack and modify the app.asar:
+   - Replace the native module with our Linux version
+   - Update keyboard key mappings
+   - Handle localization files properly
+   - Preserve all other functionality
+6. Create installation packages with:
    - Desktop entry for application menus
    - System-wide icon integration
    - Proper dependency management
@@ -102,11 +113,11 @@ The build script (`build-deb.sh`) handles the entire process:
 
 ## Updating the Build Script
 
-When a new version of Claude Desktop is released, simply update the `CLAUDE_DOWNLOAD_URL` constant at the top of `build-deb.sh` to point to the new installer. The script will handle everything else automatically.
+When a new version of Claude Desktop is released, simply update the `CLAUDE_DOWNLOAD_URL` constant at the top of the build script to point to the new installer. The script will handle everything else automatically, including detecting the correct version number from the files.
 
 # License
 
-The build scripts in this repository, are dual-licensed under the terms of the MIT license and the Apache License (Version 2.0).
+The build scripts in this repository are dual-licensed under the terms of the MIT license and the Apache License (Version 2.0).
 
 See [LICENSE-MIT](LICENSE-MIT) and [LICENSE-APACHE](LICENSE-APACHE) for details.
 
@@ -115,5 +126,4 @@ The Claude Desktop application, not included in this repository, is likely cover
 ## Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
-additional terms or conditions.
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
