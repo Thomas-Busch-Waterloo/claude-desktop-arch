@@ -55,7 +55,7 @@ The script automatically:
 
 ## 2. Debian Package
 
-For Debian-based distributions (Debian, Ubuntu, Linux Mint, MX Linux, etc.), please refer to [aaddrick's claude-desktop-debian](https://github.com/k3d3/claude-desktop-linux-flake) repository. Their implementation is specifically designed for NixOS and provides the original Nix flake that inspired this project.
+For Debian-based distributions (Debian, Ubuntu, Linux Mint, MX Linux, etc.), please refer to [aaddrick's claude-desktop-debian](https://github.com/aaddrick/claude-desktop-debian) repository. Their implementation is specifically designed for NixOS and provides the original Nix flake that inspired this project.
 
 ## 3. NixOS Implementation
 
